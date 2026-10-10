@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/post_store.dart';
 import '../models/item_post.dart';
 import '../models/post_query.dart';
+import '../widgets/max_width_body.dart';
 import '../widgets/post_card.dart';
 import '../widgets/post_filter_bar.dart';
 import 'post_detail_page.dart';
@@ -161,31 +162,33 @@ class _SearchPageState extends State<SearchPage> {
             ),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          // 还没输入时没有结果可筛，筛选条这时只是噪音，等有关键词再出现。
-          if (_hasKeyword) ...<Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: PostFilterBar(
-                keyPrefix: 'search-filter',
-                typeFilter: _typeFilter,
-                categoryFilter: _categoryFilter,
-                sortBy: _sortBy,
-                onTypeChanged: (PostType? value) =>
-                    setState(() => _typeFilter = value),
-                onCategoryChanged: (ItemCategory? value) =>
-                    setState(() => _categoryFilter = value),
-                onSortChanged: (PostSortBy value) =>
-                    setState(() => _sortBy = value),
+      body: MaxWidthBody(
+        child: Column(
+          children: <Widget>[
+            // 还没输入时没有结果可筛，筛选条这时只是噪音，等有关键词再出现。
+            if (_hasKeyword) ...<Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                child: PostFilterBar(
+                  keyPrefix: 'search-filter',
+                  typeFilter: _typeFilter,
+                  categoryFilter: _categoryFilter,
+                  sortBy: _sortBy,
+                  onTypeChanged: (PostType? value) =>
+                      setState(() => _typeFilter = value),
+                  onCategoryChanged: (ItemCategory? value) =>
+                      setState(() => _categoryFilter = value),
+                  onSortChanged: (PostSortBy value) =>
+                      setState(() => _sortBy = value),
+                ),
               ),
+              const SizedBox(height: 10),
+            ],
+            Expanded(
+              child: _buildBody(query: query, posts: posts, results: results),
             ),
-            const SizedBox(height: 10),
           ],
-          Expanded(
-            child: _buildBody(query: query, posts: posts, results: results),
-          ),
-        ],
+        ),
       ),
     );
   }
